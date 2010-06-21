@@ -31,6 +31,8 @@ def ago(t):
         return '%d %ss ago' % (s, unit)
     d = datetime.datetime.utcnow() - t
     s = d.seconds + (60*60*24*d.days)
+    if s < 0:
+        s = 0
     if s < 60:
         return ret(s, 'second')
     s /= 60
