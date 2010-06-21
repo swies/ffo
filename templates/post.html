@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+{{ modules.Post(p, comment_link=False) }}
+<h2>Comments</h2>
+<hr>
+{% for c in comments %}
+<div class="post">
+  <p class="summary">{{ c.comment }}</p>
+  <p class="meta">by {{ escape(c.user) }} {{ escape(c.ago) }}</p>
+</div>
+{% end %}
+<form method="post">
+  <textarea style="width:100%; height: 100px;" name="comment"></textarea>
+  <br>
+  <input type="submit" value="Add Comment">
+</form>
+{% end %}

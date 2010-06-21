@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h2>Please Sign In</h2>
+{% if flash %}
+  <div style="color: red">{{ flash }}</div>
+{% end %}
+<form method="post">
+  <label for="name">Enter Your Name:</label>
+  <input name="name" id="name" value="{{ user }}">
+  <br>
+  <label for="pw">Enter Your Password:</label>
+  <input name="pw" id="pw" type="password">
+  <br>
+  <input type="submit" value="Sign In">
+</form>
+<p>
+<br>
+You must be signed in to view comments, add comments, and award checks.
+</p>
+{% end %}

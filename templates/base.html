@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"> 
+  <head> 
+    <title>{% block title %}FunFriends.org{% end %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+    <link rel="stylesheet" type="text/css" href="/static/reset.css">
+    <style type="text/css">
+      html { overflow-y: scroll; }
+      body {
+        font-family: helvetica, arial, sans;
+        font-size: 85%;
+      }
+      div#main {
+        margin: 10px auto;
+        position: relative;
+        width: 600px;
+      }
+      h2.sitename a, h2.sitename a:visited {
+        color: black;
+        font-size: 120%;
+        text-decoration: none;
+      }
+      div.signinout {
+        float: right;
+        font-size: 90%;
+      }
+
+      .check {
+        cursor: pointer;
+        height: 10px;
+        width: 10px;
+      }
+
+      div.post { margin: 0 0 20px; }
+      div.post a.title { font-size: 130%; }
+      div.post p.summary { margin: 0 0 4px; }
+      div.post p.meta, div.post p.meta a, div.post p.meta a:visited { color: #aaa; }
+      div.post p.meta span.tags { color: #555; }
+      {% block css %}
+      {% end %}
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <div class="signinout">
+        {% if current_user %}
+          signed in as {{ current_user }} &mdash;
+          <a href="/signout">sign out</a>
+        {% else %}
+          <a href="/signin">sign in</a>
+        {% end %}
+      </div>
+      <h2 class="sitename"><a href="/">FunFriends.org</a></h2>
+      <hr>
+      {% block body %}
+      {% end %}
+    </div>
+    <script type="text/javascript" src="/static/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript">
+      {% if current_user %}
+        function check(evt) {
+          var img = $(this);
+          if (img.attr("src") != "/static/checkmark.gif")
+            return;
+          $.post("/post/"+img.attr("linkid")+"/check", function(data){
+            img.attr("src", "/static/greencheck.gif")
+            img.next("span").text( Number(img.next("span").text()) + 1 );
+          });
+        }
+        $("img.check").click(check);
+      {% end %}
+      {% block js %}
+      {% end %}
+    </script>
+  </body>
+</html>

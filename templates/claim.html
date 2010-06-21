@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h2>Claim Your Account</h2>
+{% if flash %}
+  <div style="color: red">{{ flash }}</div>
+{% end %}
+<form method="post" action="/claim">
+  <label for="name">Select Your Delicious Name</label>
+  <select id="name" name="name">
+    {% for u in unclaimed %}
+      <option value="{{ u.display_name }}"
+      {% if u.display_name == selected %}selected{% end %}
+      >{{ u.display_name }}</option>
+    {% end %}
+  </select>
+  <br>
+  <label for="name">Create Your New FunFriends.org Password</label>
+  <input id="pw" type="password" name="pw">
+  <br>
+  <input type="submit" value="Set It Up">
+</form>
+<p>
+<br>
+Please don't take accounts that don't belong to you.
+<br><br>
+If someone's taken your account
+email me at <a href="mailto:pat@swieskowski.net">pat@swieskowski.net</a>
+and I can reset it.
+</p>
+{% end %}
