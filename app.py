@@ -38,6 +38,7 @@ class InfoHandler(auth.BaseHandler):
     def get(self):
         self.write(util.secret() + '<br>' +
                    self.request.remote_ip + '<br>' +
+                   self.request.headers.get("X-Real-Ip") + '<br>' +
                    str(self.request.headers))
 
 application = tornado.web.Application([
@@ -63,6 +64,6 @@ if __name__ == '__main__':
     port = 8000
     if len(sys.argv) == 2:
         port = int(sys.argv[1])
-    http_server = tornado.httpserver.HTTPServer(application)
+    http_server = tornado.httpserver.HTTPServer(application, xheaders=True)
     http_server.listen(port)
     tornado.ioloop.IOLoop.instance().start()
