@@ -46,7 +46,7 @@ application = tornado.web.Application([
     static_url_prefix = '/static/',
     static_path = util.path('static'),
     template_path = util.path('templates'),
-    cookie_secret = '$2a$12$R.EjZxzYFVOSSj3W8pL6VulA9hGXevmhArqRP5drlG0upm5U4l4LK',
+    cookie_secret = util.secret(),
     debug = util.debug(),
     ui_modules = uimodules,
 )
