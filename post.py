@@ -42,14 +42,16 @@ class PostHandler(auth.SecuredHandler):
         comments = self.db.query('select user_id, comment, created_at ' +
                                  'from comments where post_id=%s ' + 
                                  'order by created_at asc', id)
+        # http://stackoverflow.com/questions/2026041/help-hacking-grubers-liberal-url-regex
+        r = r'''\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%]))(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))'''
+        r = re.compile(r, re.I)
         for c in comments:
             c['user'] = self.db.get('select display_name from users ' +
                                     'where id=%s', c.user_id).display_name
             c['ago'] = util.ago(c.created_at)
-            # http://stackoverflow.com/questions/2026041/help-hacking-grubers-liberal-url-regex
-            r = r'''\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%]))(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))'''
-            r = re.compile(r, re.I)
-            c.comment = re.sub(r, r'<a href="\1">\1</a>', c.comment)
+            # don't mess with HTML comments
+            if '<' not in c.comment or '>' not in c.comment:
+                c.comment = re.sub(r, r'<a href="\1">\1</a>', c.comment)
             c.comment = c.comment.replace('\n', '<br>')
         self.render('post.html', p = p, comments = comments)
 
