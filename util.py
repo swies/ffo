@@ -9,6 +9,12 @@ def path(*args):
 def random(bytes=5):
     return base64.b32encode(os.urandom(bytes))
 
+def secret():
+    try:
+        return open(path('.secret')).read()
+    except:
+        return 'SECRET'
+
 def yesterday(days=1):
     return datetime.datetime.now() - datetime.timedelta(days=days)
 

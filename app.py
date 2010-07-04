@@ -34,8 +34,15 @@ class MainHandler(auth.BaseHandler):
         #                          newusers = newusers,
         #                          live = live)
 
+class InfoHandler(auth.BaseHandler):
+    def get(self):
+        self.write(util.secret() + '<br>' +
+                   self.request.remote_ip + '<br>' +
+                   str(self.request.headers))
+
 application = tornado.web.Application([
     (r'/', MainHandler),
+    (r'/info', InfoHandler),
 
     (r'/claim', auth.Claim),
     (r'/signin', auth.SignIn),
