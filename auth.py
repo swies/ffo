@@ -1,5 +1,6 @@
 import bcrypt
 import db
+import hashlib
 import simplejson as json
 import tornado.web
 import util
@@ -71,16 +72,31 @@ class SignIn(BaseHandler):
 
     def post(self):
         user = self.get_argument('name', '')
-        u = self.db.get('select display_name, password from users ' +
-                        'where lower_name=%s', user.lower())
+        pw = self.get_argument('pw', '')
+        next = self.get_argument('next', '/')
+        if not next.startswith('/'):
+            next = '/'
+        u = self.db.get('select id, display_name, password, ff2_password ' +
+                        'from users where lower_name=%s', user.lower())
         if u:
-            hash = u.password
-            if bcrypt.hashpw(self.get_argument('pw', ''), hash) == hash:
-                self.set_secure_cookie(cookie_name, u.display_name)
-                next = self.get_argument('next', '/')
-                if not next.startswith('/'):
-                    next = '/'
-                return self.redirect(next)
+            if u.ff2_password:
+                if hashlib.md5(pw).hexdigest() == u.ff2_password:
+                    self.db.execute('update users set password=%s, ' +
+                                    'ff2_password=NULL, ' +
+                                    'claimed_at=NOW(), ' +
+                                    'claimed_by_ip=%s where id=%s',
+                                    bcrypt.hashpw(pw, bcrypt.gensalt()),
+                                    self.request.remote_ip,
+                                    u.id)
+                    self.set_secure_cookie(cookie_name, u.display_name)
+                    return self.redirect(next)
+            elif u.password:
+                if bcrypt.hashpw(pw, u.password) == u.password:
+                    self.db.execute('update users set ' +
+                                    'claimed_by_ip=%s where id=%s',
+                                    self.request.remote_ip, u.id)
+                    self.set_secure_cookie(cookie_name, u.display_name)
+                    return self.redirect(next)
         return self.get(user=user, flash='Sign In Failed.')
 
 class SignOut(BaseHandler):
