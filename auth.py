@@ -42,30 +42,6 @@ class SecuredHandler(BaseHandler):
         if not self.current_user:
             self.redirect('/signin?next='+self.request.path)
     
-class Claim(BaseHandler):
-    def get(self, selected='', flash=''):
-        if self.current_user:
-            self.redirect('/')
-        unclaimed = self.db.query('select display_name from users ' +
-                                  'where claimed_at is NULL')
-        self.render('claim.html', unclaimed = unclaimed,
-                                  selected=selected,
-                                  flash=flash)
-
-    def post(self):
-        selected = self.get_argument('name', '')
-        pw = self.get_argument('pw', '')
-        if not pw:
-            return self.get(selected, 'Please enter a password.')
-        self.db.execute('update users set password=%s, claimed_at=NOW(), ' +
-                        'claimed_by_ip=%s where display_name=%s ' +
-                        'and claimed_at is NULL',
-                        bcrypt.hashpw(pw, bcrypt.gensalt()),
-                        self.request.remote_ip,
-                        selected)
-        self.set_secure_cookie(cookie_name, selected)
-        self.redirect('/')
-
 class SignIn(BaseHandler):
     def get(self, user='', flash=''):
         self.render('signin.html', user=user, flash=flash)

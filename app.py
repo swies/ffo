@@ -37,7 +37,6 @@ class MainHandler(auth.BaseHandler):
 application = tornado.web.Application([
     (r'/', MainHandler),
 
-    (r'/claim', auth.Claim),
     (r'/signin', auth.SignIn),
     (r'/signout', auth.SignOut),
 
