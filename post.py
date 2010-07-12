@@ -65,8 +65,8 @@ class PostHandler(auth.SecuredHandler):
             self.db.execute('insert into comments (post_id, user_id, ' +
                             'comment, created_at) values (%s, %s, %s, ' +
                             'NOW())', id, self.current_user_id, comment)
-            self.db.execute('update posts set comments=comments+1 ' +
-                            'where id=%s', id)
+            self.db.execute('update posts set comments=comments+1, ' +
+                            'last_comment=NOW() where id=%s', id)
         self.redirect(self.request.path)
 
 class CheckHandler(auth.SecuredHandler):

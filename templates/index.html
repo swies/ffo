@@ -5,10 +5,10 @@
     {{ modules.Post(p) }}
   {% end %}
   <div style="text-align: center;">
-    <a href="/?page={{ page+1 }}">older posts</a>
+    <a href="/?sort={{ sort }}&page={{ page+1 }}">older posts</a>
     {% if page > 0 %}
     &nbsp; &nbsp; &nbsp;
-    <a href="/?page={{ page-1 }}">newer posts</a>
+    <a href="/?sort={{ sort }}&page={{ page-1 }}">newer posts</a>
     {% end %}
   </div>
 {% end %}

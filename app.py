@@ -15,24 +15,30 @@ import uimodules
 class MainHandler(auth.BaseHandler):
     def get(self):
         page = self.get_argument('page', '0')
-        try: page = int(page)
-        except: page = 0
-        if page < 0: page = 0
+        try:
+            page = int(page)
+        except:
+            page = 0
+        if page < 0:
+            page = 0
+
         limit = 25
+
+        sort = self.get_argument('sort', 'post')
+        order_by = 'posted_at'
+        if sort == 'comment':
+            order_by = 'last_comment'
+
         posts = self.db.query('select id, linkhash, author, title, ' +
                               'link, summary, tags, posted_at, ' +
                               'checks, comments ' +
-                              'from posts order by posted_at desc ' +
+                              'from posts order by ' + order_by +
+                              ' desc ' +
                               'limit %s offset %s',
                               limit, page*limit)
         for p in posts:
             self.postfix(p)
-        self.render('index.html', posts=posts, page=page)
-        #newusers = self.db.query('select count(*) as c from auth_user where date_joined >= %s;', util.yesterday())[0].c
-        #live = self.db.query('select count(*) as c from rain_subscription where auto_renew = 1;')[0].c
-        #self.render('index.html', date = datetime.date,
-        #                          newusers = newusers,
-        #                          live = live)
+        self.render('index.html', posts=posts, page=page, sort=sort)
 
 application = tornado.web.Application([
     (r'/', MainHandler),
