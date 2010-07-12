@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h2>Change Password</h2>
+{% if error %}
+  <p style="color: red; font-weight: bold;">{{ error }}</p>
+{% end %}
+{% if success %}
+  <p style="color: green; font-weight: bold;">{{ success }}</p>
+{% end %}
+<form method="post">
+  <label for="pw">Enter A New Password:</label>
+  <input name="pw" id="pw" type="password">
+  <br>
+  <input type="submit" value="Change My Password">
+</form>
+{% end %}

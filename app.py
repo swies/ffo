@@ -39,6 +39,7 @@ application = tornado.web.Application([
 
     (r'/signin', auth.SignIn),
     (r'/signout', auth.SignOut),
+    (r'/passwd', auth.Passwd),
 
     (r'/post/([0-9]+)', post.PostHandler),
     (r'/post/([0-9]+)/check', post.CheckHandler),

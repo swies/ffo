@@ -41,7 +41,7 @@ class SecuredHandler(BaseHandler):
     def prepare(self):
         if not self.current_user:
             self.redirect('/signin?next='+self.request.path)
-    
+
 class SignIn(BaseHandler):
     def get(self, user='', flash=''):
         self.render('signin.html', user=user, flash=flash)
@@ -79,3 +79,21 @@ class SignOut(BaseHandler):
     def get(self):
         self.clear_cookie(cookie_name)
         self.render('signout.html', current_user=None)
+
+class Passwd(SecuredHandler):
+    def get(self):
+        self.render('passwd.html', error='', success='')
+
+    def post(self):
+        pw = self.get_argument('pw', '')
+        if not pw:
+            self.render('passwd.html', error='Enter a password', success='')
+            return
+        self.db.execute('update users set password=%s, ' +
+                        'claimed_at=NOW(), ' +
+                        'claimed_by_ip=%s where id=%s',
+                        bcrypt.hashpw(pw, bcrypt.gensalt()),
+                        self.request.remote_ip,
+                        self.current_user_id)
+        self.render('passwd.html', error='',
+                    success='Your password has been updated')
