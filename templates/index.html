@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block menu %}
+  {% if sort == 'comment' %}
+    sorted by latest comment<br>
+    <a href="/?sort=post&page={{ page }}">sort by latest post</a><br>
+  {% else %}
+    sorted by latest post<br>
+    <a href="/?sort=comment&page={{ page }}">sort by latest comment</a><br>
+  {% end %}
+  <hr>
+{% end %}
+
 {% block body %}
   {% for p in posts %}
     {{ modules.Post(p) }}

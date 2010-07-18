@@ -15,10 +15,12 @@
       hr {
         border: none;
         border-top: 1px solid black;
+        clear: both;
         width: 100%;
       }
       div#main {
         margin: 10px auto;
+        padding-bottom: 10px;
         position: relative;
         width: 600px;
       }
@@ -30,6 +32,30 @@
       div.signinout {
         float: right;
         font-size: 90%;
+      }
+      h2.sitename {
+        float: left;
+        margin-bottom: 3px;
+        margin-right: 3px;
+      }
+
+      div.menu {
+        float: left;
+        position: relative;
+      }
+      div.menu div.toggle {
+        border: 1px solid black;
+        cursor: pointer;
+        padding: 0 3px;
+      }
+      div.menu div.items {
+        background: #eee;
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        width: 200px;
+        padding: 5px 10px;
       }
 
       .check {
@@ -49,15 +75,26 @@
   </head>
   <body>
     <div id="main">
-      <div class="signinout">
-        {% if current_user %}
-          signed in as {{ current_user }} &mdash;
-          <a href="/signout">sign out</a>
-        {% else %}
+      {% if not current_user %}
+        <div class="signinout">
           <a href="/signin">sign in</a>
-        {% end %}
-      </div>
-      <h2 class="sitename"><a href="/">FunFriends.org</a></h2>
+        </div>
+      {% end %}
+      <h2 class="sitename">
+        <a href="/">FunFriends.org</a>
+      </h2>
+      {% if current_user %}
+        <div class="menu">
+          <div class="toggle">&raquo;</div>
+          <div class="items">
+            {% block menu %}
+            {% end %}
+            signed in as {{ current_user }} <br>
+            <a href="/signout">sign out</a> <br>
+            <a href="/passwd">change password</a>
+          </div>
+        </div>
+      {% end %}
       <hr>
       {% block body %}
       {% end %}
@@ -75,6 +112,10 @@
           });
         }
         $("img.check").click(check);
+
+        $("div.menu div.toggle").click(
+            function(){$("div.menu div.items").toggle();}
+        );
       {% end %}
       {% block js %}
       {% end %}
