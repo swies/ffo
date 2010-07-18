@@ -1,5 +1,10 @@
 <div class="post">
   <a class="title" href="{{ escape(p.link) }}">{{ escape(p.title) }}</a><br>
+  {% if embedly %}
+  <div class="embed">
+    <a class="embedshow" href="{{ escape(p.link) }}">show it</a>
+  </div>
+  {% end %}
   <p class="summary">{{ p.summary }}</p>
   <p class="meta">by {{ escape(p.author) }}
   {% if p.taglist %}

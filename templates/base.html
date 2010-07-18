@@ -58,6 +58,15 @@
         padding: 5px 10px;
       }
 
+      .embed {
+        margin-top: 2px;
+      }
+      .embedshow, a.embedshow:visited {
+        color: red;
+        font-size: 90%;
+        text-decoration: none;
+      }
+
       .check {
         cursor: pointer;
         height: 10px;
@@ -114,7 +123,26 @@
         $("img.check").click(check);
 
         $("div.menu div.toggle").click(
-            function(){$("div.menu div.items").toggle();}
+          function(){$("div.menu div.items").toggle();}
+        );
+
+        $("a.embedshow").click(
+          function() {
+            var div = $(this).parent('div');
+            div.html("<span class='embedshow'>loading&hellip;<span>");
+            var url = 'http://api.embed.ly/v1/api/oembed?url=' +
+                      escape(this.href) + '&callback=?';
+            $.getJSON(url, function(r){
+              if (r.error) {
+                div.html("<span class='embedshow'>sorry, couldn't load that<span>");
+              } else if (r.html) {
+                div.html(r.html);
+              } else if (r.type == 'photo') {
+                div.html('<img style="max-width: 600px;" src="' + r.url + '">');
+              }
+            });
+            return false;
+          }
         );
       {% end %}
       {% block js %}
