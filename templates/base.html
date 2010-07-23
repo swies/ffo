@@ -8,7 +8,7 @@
     <style type="text/css">
       html { overflow-y: scroll; }
       body {
-        font-family: helvetica, arial, sans;
+        font-family: helvetica, arial, sans-serif;
         font-size: 85%;
         text-rendering: optimizeLegibility;
       }
@@ -125,26 +125,27 @@
         $("div.menu div.toggle").click(
           function(){$("div.menu div.items").toggle();}
         );
-
-        $("a.embedshow").click(
-          function() {
-            var div = $(this).parent('div');
-            div.html("<span class='embedshow'>loading&hellip;<span>");
-            var url = 'http://api.embed.ly/v1/api/oembed?url=' +
-                      escape(this.href) + '&callback=?';
-            $.getJSON(url, function(r){
-              if (r.error) {
-                div.html("<span class='embedshow'>sorry, couldn't load that<span>");
-              } else if (r.html) {
-                div.html(r.html);
-              } else if (r.type == 'photo') {
-                div.html('<img style="max-width: 600px;" src="' + r.url + '">');
-              }
-            });
-            return false;
-          }
-        );
       {% end %}
+
+      $("a.embedshow").click(
+        function() {
+          var div = $(this).parent('div');
+          div.html("<span class='embedshow'>loading&hellip;<span>");
+          var url = 'http://api.embed.ly/v1/api/oembed?url=' +
+                    escape(this.href) + '&callback=?';
+          $.getJSON(url, function(r){
+            if (r.error) {
+              div.html("<span class='embedshow'>sorry, couldn't load that<span>");
+            } else if (r.html) {
+              div.html(r.html);
+            } else if (r.type == 'photo') {
+              div.html('<img style="max-width: 600px;" src="' + r.url + '">');
+            }
+          });
+          return false;
+        }
+      );
+
       {% block js %}
       {% end %}
     </script>
