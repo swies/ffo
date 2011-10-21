@@ -27,7 +27,7 @@ def div(a, b):
 
 def debug():
     '''are we running on a dev machine?'''
-    return os.uname()[1] in ('bauxite', 'bauxite.local', 'raven')
+    return os.uname()[1] in ('slim.local')
 
 def ago(t):
     '''format a nice x seconds/minutes/days/months ago thing'''
