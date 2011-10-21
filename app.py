@@ -2,7 +2,7 @@
 
 import datetime
 import sys
-import simplejson as json
+import json
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
@@ -56,6 +56,7 @@ application = tornado.web.Application([
     cookie_secret = util.secret(),
     debug = util.debug(),
     ui_modules = uimodules,
+    autoescape = None,
 )
 
 if __name__ == '__main__':
