@@ -25,7 +25,7 @@ create table checks (
 
 import auth
 import re
-import simplejson as json
+import json
 import tornado.web
 import util
 
@@ -40,7 +40,7 @@ class PostHandler(auth.SecuredHandler):
             raise tornado.web.HTTPError(404)
         self.postfix(p)
         comments = self.db.query('select user_id, comment, created_at ' +
-                                 'from comments where post_id=%s ' + 
+                                 'from comments where post_id=%s ' +
                                  'order by created_at asc', id)
         # http://stackoverflow.com/questions/2026041/help-hacking-grubers-liberal-url-regex
         r = r'''\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%]))(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))'''

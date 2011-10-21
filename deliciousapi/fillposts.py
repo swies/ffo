@@ -18,7 +18,7 @@ create table posts (
 import calendar
 import feedparser
 import hashlib
-import simplejson as json
+import json
 import time
 import tornado.database
 
@@ -39,7 +39,7 @@ def add_from_feed(feed):
         t = p.updated_parsed
         #t = time.localtime(calendar.timegm(t)) # convert to local time
         t = time.strftime('%Y-%m-%d %H:%M:%S', t) # convert to string
-        db.execute('insert into posts (linkhash, author, title, ' + 
+        db.execute('insert into posts (linkhash, author, title, ' +
                            'link, summary, tags, posted_at) values ' +
                            '(%s, %s, %s, %s, %s, %s, %s)',
                            linkhash,

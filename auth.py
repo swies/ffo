@@ -1,7 +1,7 @@
 import bcrypt
 import db
 import hashlib
-import simplejson as json
+import json
 import tornado.web
 import util
 
@@ -35,7 +35,7 @@ class BaseHandler(tornado.web.RequestHandler, db.DBMixin):
     def postfix(self, p):
         p['taglist'] = json.loads(p.tags)
         p['ago'] = util.ago(p.posted_at)
-        p['didcheck'] = self.user_did_check(p.id) 
+        p['didcheck'] = self.user_did_check(p.id)
 
 class SecuredHandler(BaseHandler):
     def prepare(self):

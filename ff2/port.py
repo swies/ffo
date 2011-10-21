@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import hashlib
-import simplejson
+import json
 import tornado.database
 
 ffo = tornado.database.Connection('localhost', 'ffo', 'root', '')
@@ -51,7 +51,7 @@ def port_data():
         tags = []
         for c in ff2.iter('select name from tags where postID = %s order by rank asc', p.id):
             tags.append(c.name)
-        tags = simplejson.dumps(tags) 
+        tags = json.dumps(tags)
         author = ff2_name[p.user]
         linkhash = hashlib.md5(p.url).hexdigest()
         if not get_id(linkhash, author):
@@ -59,7 +59,7 @@ def port_data():
                         'link, summary, tags, posted_at) values (%s, ' +
                         '%s, %s, %s, %s, %s, %s)', linkhash, author,
                         p.title, p.url, p.notes, tags, p.stamp)
-        i = get_id(linkhash, author) 
+        i = get_id(linkhash, author)
         for c in ff2.iter('select user, text, stamp from comments where post = %s', p.id):
             ffo.execute('insert into comments (post_id, user_id, ' +
                         'comment, created_at) values (%s, %s, %s, %s)',
