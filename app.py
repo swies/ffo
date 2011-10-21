@@ -49,6 +49,8 @@ application = tornado.web.Application([
 
     (r'/post/([0-9]+)', post.PostHandler),
     (r'/post/([0-9]+)/check', post.CheckHandler),
+
+    (r'/newpost', post.NewPost),
 ],
     static_url_prefix = '/static/',
     static_path = util.path('static'),

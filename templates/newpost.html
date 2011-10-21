@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block body %}
+<style type="text/css">
+  label { display: block; margin-top: 1em; }
+  .error { color: red; }
+</style>
+<h2>New Post</h2>
+{% if errors %}
+<ul>
+  {% for e in errors %}
+    <li class="error">{{ e }}</li>
+  {% end %}
+</ul>
+{% end %}
+<form method="post">
+  <label for="url">url:</label>
+  <input required type="url" style="width: 100%;" id="url" name="url" value="{{ url }}"> <br>
+  <label for="title">title:</label>
+  <input required style="width: 100%;" id="title" name="title" value="{{ title }}"> <br>
+  <label for="tags">tags (optional, space separated):</label>
+  <input style="width: 100%;" id="tags" name="tags" value="{{ tags }}"> <br>
+  <label for="description">description (optional):</label>
+  <textarea style="width: 100%; height: 100px;" id="description" name="description">{{ description }}</textarea> <br>
+  <input type="submit" value="Post it!">
+</form>
+{% end %}

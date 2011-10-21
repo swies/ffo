@@ -29,7 +29,7 @@
         font-size: 120%;
         text-decoration: none;
       }
-      div.signinout {
+      div.inheader {
         float: right;
         font-size: 90%;
       }
@@ -84,11 +84,13 @@
   </head>
   <body>
     <div id="main">
+      <div class="inheader">
       {% if not current_user %}
-        <div class="signinout">
-          <a href="/signin">sign in</a>
-        </div>
+        <a href="/signin">sign in</a>
+      {% else %}
+        <a href="/newpost">new post</a>
       {% end %}
+      </div>
       <h2 class="sitename">
         <a href="/">FunFriends.org</a>
       </h2>

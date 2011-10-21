@@ -24,8 +24,9 @@ create table checks (
 '''
 
 import auth
-import re
+import hashlib
 import json
+import re
 import tornado.web
 import util
 
@@ -68,6 +69,40 @@ class PostHandler(auth.SecuredHandler):
             self.db.execute('update posts set comments=comments+1, ' +
                             'last_comment=NOW() where id=%s', id)
         self.redirect(self.request.path)
+
+
+class NewPost(auth.SecuredHandler):
+    def get(self):
+        self.render('newpost.html', errors=[], title='', url='', tags='', description='')
+
+    def post(self):
+        errors = []
+        url = self.get_argument('url', '')
+        if not url:
+            errors.append("You've got to enter a url")
+        title = self.get_argument('title', '')
+        if not title:
+            errors.append("Every post needs a title")
+        tags = self.get_argument('tags', '')
+        description = self.get_argument('description', '')
+
+        if errors:
+            return self.render('newpost.html', errors=errors, title=title, url=url, tags=tags, description=description)
+
+        linkhash = hashlib.md5(url).hexdigest()
+        split_tags = []
+        if tags.strip():
+            split_tags = tags.split(' ')
+        self.db.execute('insert into posts (linkhash, author, title, ' +
+                           'link, summary, tags, posted_at) values ' +
+                           '(%s, %s, %s, %s, %s, %s, NOW())',
+                           linkhash,
+                           self.current_user.lower(),
+                           title,
+                           url,
+                           description,
+                           json.dumps(split_tags))
+        self.redirect('/')
 
 class CheckHandler(auth.SecuredHandler):
     def post(self, id):
